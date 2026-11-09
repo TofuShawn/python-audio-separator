@@ -84,9 +84,16 @@ python = ">=3.10,!=3.14.1"
 # 2.8 / torchvision 0.23 lock on unvalidated Python <3.14 platforms.
 # Python 3.14 needs the first pair with cp314 wheels; torchvision 0.28 excludes
 # Python 3.14.1, which is mirrored by the project Python constraint above.
+# Fork note (TofuShawn, 2026-11-09): the Windows/non-ARM pre-3.14 marker used to
+# cap torch at "<2.9", which excludes the only Windows ROCm wheel AMD publishes
+# (torch 2.9.1+rocm7.2.1, cp312, repo.radeon.com). Measured on that exact stack,
+# Windows 11 + RX 7900 XTX: imports clean, VR 1_HP-UVR warm 1.88 s, and the
+# vocals/instrumental match a UVR 5.6 build at 47.6 dB / 71.2 dB (gain-matched)
+# on the same 30 s clip. The cap is lifted so a ROCm install is expressible at
+# all; CUDA/DirectML users keep the same floor.
 torch = [
     { version = ">=2.13,<3", markers = "sys_platform == 'linux' or (sys_platform == 'darwin' and platform_machine == 'arm64')" },
-    { version = ">=2.3,<2.9", markers = "sys_platform != 'linux' and (sys_platform != 'darwin' or platform_machine != 'arm64') and python_version < '3.14'" },
+    { version = ">=2.3,<3", markers = "sys_platform != 'linux' and (sys_platform != 'darwin' or platform_machine != 'arm64') and python_version < '3.14'" },
     { version = ">=2.13,<3", markers = "sys_platform != 'linux' and (sys_platform != 'darwin' or platform_machine != 'arm64') and python_version >= '3.14'" },
 ]
 
