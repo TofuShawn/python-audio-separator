@@ -1,7 +1,11 @@
 # Windows + AMD ROCm
 
-This fork exists so `audio-separator` can run on Windows with AMD's ROCm torch
-build, which is the only combination on that platform where **the torch models**
+The separation engine in this package is **UVR5** — Ultimate Vocal Remover 5's
+models and algorithms; `audio_separator/separator/uvr_lib_v5` is that engine,
+packaged. This repository is a carrier and an API, not a different separator.
+
+This fork exists so the package can run on Windows with AMD's ROCm torch build,
+which is the only combination on that platform where **the torch models**
 (VR, Demucs, MDXC, RoFormer) get GPU inference. DirectML remains the ONNX-only
 path it already is; see the main README's DirectML section for its limits
 (Demucs unsupported, RoFormer allocator exhaustion) — those are
