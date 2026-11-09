@@ -7,6 +7,17 @@ path it already is; see the main README's DirectML section for its limits
 (Demucs unsupported, RoFormer allocator exhaustion) — those are
 `torch-directml` limitations and do not apply here.
 
+## Supported GPUs: RDNA 3 and RDNA 4 only
+
+AMD's Windows ROCm support matrix lists RDNA 3 (Radeon RX 7000, gfx110x) and
+RDNA 4 (Radeon RX 9000, gfx120x) GPUs; RDNA 2 (RX 6000) and older are **not
+supported** on Windows.
+<https://rocm.docs.amd.com/projects/install-on-windows/en/latest/reference/system-requirements.html>
+
+On an unsupported card, install a CPU torch build and use `--use_directml`: the
+ONNX (MDX) models still run on the DX12 GPU, the torch models run on the CPU.
+There is no GPU path for Demucs/RoFormer on RDNA 2 under Windows.
+
 ## Install
 
 Python 3.12 is required: the only Windows ROCm wheel is `cp312`.
@@ -35,6 +46,18 @@ python -c "import torch; print(torch.__version__, torch.version.hip, torch.cuda.
 
 `torch.version.hip` must be non-empty. If it is `None`, pip gave you a CPU or
 CUDA wheel and this page does not apply.
+
+## Use
+
+```powershell
+audio-separator --env_info
+audio-separator "C:\Music\song.flac" -m 1_HP-UVR.pth `
+    --model_file_dir "D:\AI\Models" --output_dir "D:\Out" --output_format WAV
+```
+
+A missing model is downloaded into `model_file_dir` and verified against the
+published SHA-256. `normalization` defaults to `0.9`; UVR 5.6 writes peaks at
+`1.0`, which is the same waveform at a 1.149x gain.
 
 ## Measured (Windows 11, RX 7900 XTX, torch 2.9.1+rocm7.2.1, 2026-11-09)
 
